@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/Aminemaalej/devops-tetris-project.git'
+                git branch: 'main', url: 'https://github.com/asaf527/devops-tetris-project.git'
             }
         }
         stage('Initializing Terraform') {
@@ -40,7 +40,7 @@ pipeline {
                 withAWS(credentials: 'aws-key', region: 'us-east-1') {
                     dir('eks-terraform') {
                         script {
-                            sh "terraform plan -var-file=${params.'File-Name'}"
+                            sh "terraform plan -lock=false -var-file=${params.'File-Name'}"
                         }
                     }
                 }
@@ -54,9 +54,9 @@ pipeline {
                         dir('eks-terraform') {
                             script {
                                 if (params.'Terraform-Action' == 'apply') {
-                                    sh "terraform apply -auto-approve -var-file=${params.'File-Name'}"
+                                    sh "terraform apply -lock=false -auto-approve -var-file=${params.'File-Name'}"
                                 } else if (params.'Terraform-Action' == 'destroy') {
-                                    sh "terraform destroy -auto-approve -var-file=${params.'File-Name'}"
+                                    sh "terraform destroy -lock=false -auto-approve -var-file=${params.'File-Name'}"
                                 } else {
                                     error "Invalid value for Terraform-Action: ${params.'Terraform-Action'}"
                                 }
