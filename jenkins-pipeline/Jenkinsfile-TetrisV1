@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/Aminemaalej/devops-tetris-project.git'
+                git branch: 'main', url: 'https://github.com/asaf527/devops-tetris-project.git'
             }
         }
         stage('Installing Dependencies') {
@@ -39,28 +39,28 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {   
-                        sh 'docker tag tetrisv1 aminemaalej/tetrisv1:${BUILD_NUMBER}'
-                        sh 'docker push aminemaalej/tetrisv1:${BUILD_NUMBER}'
+                        sh 'docker tag tetrisv1 asaf527/tetrisv1:${BUILD_NUMBER}'
+                        sh 'docker push asaf527/tetrisv1:${BUILD_NUMBER}'
                     }
                 }
             }
         }
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Aminemaalej/devops-tetris-project.git'
+                git branch: 'main', url: 'https://github.com/asaf527/devops-tetris-project.git'
             }
         }
         stage('Update Deployment file') {
             environment {
                 GIT_REPO_NAME = "devops-tetris-project"
-                GIT_USER_NAME = "Aminemaalej"
+                GIT_USER_NAME = "asaf527"
             }
             steps {
                 dir('Manifest-file') {
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                         sh '''
-                            git config user.email "aminemaalej96@gmail.com"
-                            git config user.name "Aminemaalej"
+                            git config user.email "asafkarako@outlook.co.il"
+                            git config user.name "asaf527"
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
                             imageTag=$(grep -oP '(?<=tetrisv1:)[^ ]+' deployment-service.yml)
